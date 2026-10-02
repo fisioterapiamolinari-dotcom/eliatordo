@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prenota con Elia Tordo</title>
+<meta name="description" content="Scegli un orario libero e prenota il tuo appuntamento con Elia Tordo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #f47920;
+    --accent-text: #b84d08;
+    --accent-soft: rgba(244,121,32,.10);
+    --bg: #f8f4ef;
+    --ink: #1a1a1a;
+    --muted: #66625c;
+    --white: #fff;
+    --line: rgba(26,26,26,.14);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); color: var(--ink); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+
+  header { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; gap: 16px; }
+  .brand { font-family: var(--serif); font-size: 22px; }
+  .nav-link { font-size: 14px; font-weight: 500; color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+
+  .hero { padding: 40px 0 36px; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 9vw, 64px); line-height: 1.02; letter-spacing: -.01em; }
+  .hero p { margin-top: 16px; max-width: 46ch; font-size: 18px; color: var(--muted); }
+
+  h2 { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.15; }
+  .section { padding: 28px 0 48px; border-top: 1px solid var(--line); }
+  .section > .lead { margin: 6px 0 20px; color: var(--muted); max-width: 52ch; }
+
+  .day { display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 16px 0; border-top: 1px solid var(--line); align-items: start; }
+  .day:first-child { border-top: 0; }
+  .day-label strong { display: block; font-weight: 700; }
+  .day-label span { color: var(--muted); font-size: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font: inherit; font-weight: 500; min-height: 44px; min-width: 76px; padding: 0 14px; background: var(--white); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: background .15s, border-color .15s; }
+  .chip:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .empty, .loading { color: var(--muted); padding: 12px 0; }
+
+  .btn { font: inherit; font-weight: 700; min-height: 48px; padding: 0 22px; border: 0; border-radius: 10px; background: var(--accent); color: var(--ink); cursor: pointer; transition: filter .15s; }
+  .btn:hover:not(:disabled) { filter: brightness(.94); }
+  .btn:disabled { opacity: .55; cursor: wait; }
+  .btn-quiet { background: transparent; border: 1px solid var(--line); font-weight: 500; }
+  .btn-danger { background: transparent; border: 1px solid var(--line); color: #a32414; font-weight: 500; }
+  .btn-danger[data-armed], .swap-btn[data-armed] { background: #a32414; border-color: #a32414; color: #fff; }
+  .more { margin-top: 12px; }
+
+  /* gestione appuntamento */
+  .mine-when { font-family: var(--serif); font-size: 30px; line-height: 1.15; margin: 4px 0 20px; }
+  .opt { display: flex; gap: 12px; align-items: flex-start; padding: 16px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  .opt input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+  .opt small { display: block; color: var(--muted); }
+  .board-title { font-weight: 700; margin: 24px 0 4px; }
+  .swap-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .swap-btn { font: inherit; font-weight: 500; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--white); cursor: pointer; }
+  .swap-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .cancel-wrap { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+  footer { padding: 28px 0 56px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+  footer a { color: inherit; }
+
+  /* dialog */
+  dialog { border: 0; border-radius: 16px; padding: 0; width: calc(100% - 32px); max-width: 460px; max-height: calc(100% - 32px); color: var(--ink); background: var(--white); margin: auto; }
+  dialog::backdrop { background: rgba(26,26,26,.5); }
+  .dlg-body { padding: 26px 24px 24px; }
+  .dlg-close { float: right; font: inherit; font-size: 26px; line-height: 1; width: 44px; height: 44px; margin: -12px -12px 0 0; border: 0; background: none; cursor: pointer; border-radius: 10px; }
+  .dlg-when { margin: 6px 0 18px; color: var(--muted); }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .field input[type=text], .field input[type=tel], .field input[type=email] { width: 100%; font: inherit; font-size: 16px; min-height: 46px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); color: var(--ink); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--muted); margin: 4px 0 16px; }
+  .consent input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+  .consent a { color: var(--accent-text); }
+  .form-error { color: #a32414; font-size: 14px; min-height: 20px; margin-bottom: 8px; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .dlg-actions { display: flex; flex-direction: column; gap: 10px; }
+  .done-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; font-size: 24px; font-weight: 700; margin-bottom: 14px; }
+
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 15px; max-width: calc(100% - 32px); z-index: 50; }
+  .toast[hidden] { display: none; }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 560px) {
+    .day { grid-template-columns: 1fr; gap: 8px; }
+    .day-label strong, .day-label span { display: inline; }
+    .day-label span { margin-left: 8px; }
+    .row { grid-template-columns: 1fr; gap: 0; }
+    .swap-row { flex-direction: column; align-items: stretch; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">Elia Tordo</div>
+    <a class="nav-link" id="nav-mine" href="#gestisci" hidden>Il mio appuntamento</a>
+  </header>
+
+  <section class="hero">
+    <h1>Prenota con Elia</h1>
+    <p>Sedute da 45 minuti. Scegli un orario libero qui sotto, inserisci i tuoi dati e ricevi la conferma via email.</p>
+  </section>
+
+  <main>
+    <section class="section" id="prenota" aria-labelledby="t-orari">
+      <h2 id="t-orari">Orari liberi</h2>
+      <p class="lead">Tocca un orario per prenotarlo.</p>
+      <div id="days"><p class="loading">Carico gli orari…</p></div>
+      <button class="btn btn-quiet more" id="more" type="button" hidden>Mostra altri giorni</button>
+    </section>
+
+    <section class="section" id="gestisci" aria-labelledby="t-mine" hidden>
+      <h2 id="t-mine">Il tuo appuntamento</h2>
+      <p class="mine-when" id="mine-when"></p>
+
+      <label class="opt" id="swap-opt">
+        <input type="checkbox" id="swap-toggle">
+        <span>Sono disponibile a scambiare
+          <small>Gli altri clienti vedranno solo data e ora, mai il tuo nome. Se qualcuno accetta lo scambio, l'orario cambia subito e ricevi una email.</small>
+        </span>
+      </label>
+
+      <div id="board-wrap">
+        <p class="board-title">Orari che altri clienti hanno messo a disposizione</p>
+        <div id="board"></div>
+      </div>
+
+      <div class="cancel-wrap">
+        <button class="btn btn-danger" id="cancel-btn" type="button">Annulla appuntamento</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Elia Tordo · <a href="privacy-policy.html">Privacy</a></p>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="dlg-body">
+    <button class="dlg-close" id="dlg-close" type="button" aria-label="Chiudi">&times;</button>
+
+    <div id="dlg-form-wrap">
+      <h2 id="dlg-title">I tuoi dati</h2>
+      <p class="dlg-when" id="dlg-when"></p>
+      <form id="book-form" novalidate>
+        <div class="row">
+          <div class="field"><label for="f-nome">Nome</label><input type="text" id="f-nome" name="nome" autocomplete="given-name" required></div>
+          <div class="field"><label for="f-cognome">Cognome</label><input type="text" id="f-cognome" name="cognome" autocomplete="family-name" required></div>
+        </div>
+        <div class="field"><label for="f-tel">Telefono</label><input type="tel" id="f-tel" name="telefono" autocomplete="tel" required></div>
+        <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" name="email" autocomplete="email" required></div>
+        <div class="hp" aria-hidden="true"><label>Sito web <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="consent"><input type="checkbox" name="privacy" required>
+          <span>Ho letto l'<a href="privacy-policy.html" target="_blank" rel="noopener">informativa privacy</a>. Nel calendario comparirà solo il mio nome.</span></label>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <button class="btn" id="submit-btn" type="submit" style="width:100%">Conferma prenotazione</button>
+      </form>
+    </div>
+
+    <div id="dlg-done" hidden>
+      <div class="done-icon" aria-hidden="true">✓</div>
+      <h2>Prenotazione confermata</h2>
+      <p class="dlg-when" id="done-when"></p>
+      <p style="margin-bottom:20px">Ti ho scritto una email con il link personale per annullare o scambiare l'appuntamento. Controlla anche la cartella spam.</p>
+      <div class="dlg-actions">
+        <button class="btn" id="done-go" type="button">Vai al mio appuntamento</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* ═════════ CONFIGURAZIONE ═════════ */
+const CONFIG = {
+  API: 'INCOLLA_QUI_URL_WEB_APP_APPS_SCRIPT',   // https://script.google.com/macros/s/.../exec
+  DAYS_AHEAD: 42,                                // deve essere <= DAYS_AHEAD di Code.gs
+  GIORNI_INIZIALI: 7                             // giorni con orari mostrati all'apertura
+};
+
+const TOKEN_KEY = 'elia_token';
+const ERR = {
+  occupato: "Quell'orario è appena stato prenotato. Sceglierne un altro.",
+  gia_prenotato: "C'è già un appuntamento in programma con questa email. Usa il link nella email di conferma per cambiarlo.",
+  dati_non_validi: "Controlla i dati inseriti.",
+  token_non_valido: "Il link personale non è più valido.",
+  non_disponibile: "Questo orario non è più disponibile per lo scambio.",
+  troppo_vicino: "Mancano troppe poche ore all'appuntamento: contatta Elia direttamente.",
+  errore_server: "Qualcosa non ha funzionato. Riprova tra poco."
+};
+
+const $ = (s, r) => (r || document).querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const pad = n => String(n).padStart(2, '0');
+const ymdOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const dateOf = ymd => new Date(ymd + 'T12:00:00');
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const fmtLong = ymd => cap(dateOf(ymd).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }));
+
+const state = { days: {}, shown: CONFIG.GIORNI_INIZIALI, selected: null, token: null };
+
+function loadToken() { try { return localStorage.getItem(TOKEN_KEY); } catch (e) { return null; } }
+function saveToken(t) { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch (e) {} state.token = t || null; }
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 4500);
+}
+
+async function call(method, payload) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 25000);
+  try {
+    const r = method === 'GET'
+      ? await fetch(CONFIG.API + '?' + new URLSearchParams(payload), { signal: ctrl.signal, cache: 'no-store' })
+      : await fetch(CONFIG.API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), signal: ctrl.signal });
+    return await r.json();
+  } finally { clearTimeout(timer); }
+}
+
+/* ═════════ ORARI LIBERI ═════════ */
+async function loadSlots() {
+  const from = new Date(), to = new Date();
+  to.setDate(to.getDate() + CONFIG.DAYS_AHEAD);
+  try {
+    const r = await call('GET', { action: 'getSlotsRange', from: ymdOf(from), to: ymdOf(to) });
+    if (!r.ok) throw new Error(r.error);
+    state.days = r.giorni || {};
+    renderDays();
+  } catch (e) {
+    console.warn(e);
+    const box = $('#days'); box.replaceChildren();
+    const p = el('p', 'empty', 'Non riesco a leggere gli orari. ');
+    const b = el('button', 'btn btn-quiet', 'Riprova'); b.type = 'button';
+    b.addEventListener('click', () => { box.replaceChildren(el('p', 'loading', 'Carico gli orari…')); loadSlots(); });
+    p.append(b); box.append(p); $('#more').hidden = true;
+  }
+}
+
+function renderDays() {
+  const box = $('#days'); box.replaceChildren();
+  const keys = Object.keys(state.days).filter(k => state.days[k].length).sort();
+  if (!keys.length) {
+    box.append(el('p', 'empty', 'Non ci sono orari liberi nei prossimi giorni. Riprova più tardi.'));
+    $('#more').hidden = true; return;
+  }
+  keys.slice(0, state.shown).forEach(ymd => {
+    const d = dateOf(ymd);
+    const row = el('div', 'day');
+    const label = el('div', 'day-label');
+    label.append(el('strong', null, cap(d.toLocaleDateString('it-IT', { weekday: 'long' }))),
+                 el('span', null, d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })));
+    const chips = el('div', 'chips');
+    state.days[ymd].forEach(t => {
+      const b = el('button', 'chip', t); b.type = 'button';
+      b.setAttribute('aria-label', fmtLong(ymd) + ' alle ' + t);
+      b.addEventListener('click', () => openBooking(ymd, t));
+      chips.append(b);
+    });
+    row.append(label, chips); box.append(row);
+  });
+  $('#more').hidden = keys.length <= state.shown;
+}
+$('#more').addEventListener('click', () => { state.shown += 7; renderDays(); });
+
+/* ═════════ PRENOTAZIONE ═════════ */
+const dlg = $('#dlg');
+function openBooking(ymd, time) {
+  state.selected = { date: ymd, time };
+  $('#dlg-when').textContent = fmtLong(ymd) + ' alle ' + time + ' · 45 minuti';
+  $('#form-error').textContent = '';
+  $('#dlg-form-wrap').hidden = false; $('#dlg-done').hidden = true;
+  $('#submit-btn').disabled = false; $('#submit-btn').textContent = 'Conferma prenotazione';
+  dlg.showModal();
+  $('#f-nome').focus();
+}
+$('#dlg-close').addEventListener('click', () => dlg.close());
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+$('#book-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, v = n => f.elements[n].value.trim(), err = $('#form-error');
+  if (v('nome').length < 2 || v('cognome').length < 2) { err.textContent = 'Inserisci nome e cognome.'; return; }
+  if (!/^[+0-9 ()\-]{6,}$/.test(v('telefono'))) { err.textContent = 'Inserisci un numero di telefono valido.'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email'))) { err.textContent = 'Inserisci un indirizzo email valido.'; return; }
+  if (!f.elements.privacy.checked) { err.textContent = "Per prenotare serve confermare di aver letto l'informativa privacy."; return; }
+  err.textContent = '';
+
+  const btn = $('#submit-btn'); btn.disabled = true; btn.textContent = 'Invio in corso…';
+  try {
+    const r = await call('POST', {
+      action: 'book', date: state.selected.date, time: state.selected.time,
+      nome: v('nome'), cognome: v('cognome'), telefono: v('telefono'), email: v('email'), website: v('website')
+    });
+    if (!r.ok) {
+      err.textContent = ERR[r.error] || ERR.errore_server;
+      btn.disabled = false; btn.textContent = 'Conferma prenotazione';
+      if (r.error === 'occupato') { loadSlots(); }
+      return;
+    }
+    saveToken(r.token);
+    $('#done-when').textContent = fmtLong(state.selected.date) + ' alle ' + state.selected.time;
+    $('#dlg-form-wrap').hidden = true; $('#dlg-done').hidden = false;
+    f.reset();
+    loadSlots(); refreshMine();
+  } catch (x) {
+    console.error(x);
+    err.textContent = ERR.errore_server;
+    btn.disabled = false; btn.textContent = 'Conferma prenotazione';
+  }
+});
+$('#done-go').addEventListener('click', () => {
+  dlg.close();
+  $('#gestisci').scrollIntoView({ behavior: 'smooth' });
+});
+
+/* ═════════ IL MIO APPUNTAMENTO + SCAMBIO ═════════ */
+function hideMine() { $('#gestisci').hidden = true; $('#nav-mine').hidden = true; }
+
+async function refreshMine() {
+  if (!state.token) { hideMine(); return; }
+  try {
+    const r = await call('GET', { action: 'getMine', token: state.token });
+    if (!r.ok || !r.booking) { saveToken(null); hideMine(); return; }
+    const b = r.booking;
+    $('#mine-when').textContent = fmtLong(b.date) + ' alle ' + b.time;
+    const tg = $('#swap-toggle'); tg.checked = !!b.swapOk; tg.disabled = !b.modificabile;
+    $('#swap-opt').hidden = !b.modificabile; $('#board-wrap').hidden = !b.modificabile;
+    $('#cancel-btn').hidden = !b.modificabile;
+    $('#gestisci').hidden = false; $('#nav-mine').hidden = false;
+    if (b.modificabile) loadBoard();
+  } catch (e) { console.warn(e); }
+}
+
+async function loadBoard() {
+  const box = $('#board');
+  try {
+    const r = await call('GET', { action: 'getSwapBoard', token: state.token });
+    box.replaceChildren();
+    if (!r.ok || !r.items.length) {
+      box.append(el('p', 'empty', 'Al momento nessun cliente ha messo a disposizione il proprio orario.'));
+      return;
+    }
+    r.items.forEach(it => {
+      const row = el('div', 'swap-row');
+      row.append(el('span', null, fmtLong(it.date) + ' alle ' + it.time));
+      const b = el('button', 'swap-btn', 'Scambia con questo'); b.type = 'button';
+      arm(b, 'Conferma lo scambio', () => doSwap(it.id, b));
+      row.append(b); box.append(row);
+    });
+  } catch (e) { box.replaceChildren(el('p', 'empty', 'Non riesco a leggere gli scambi disponibili.')); }
+}
+
+// Primo tocco: chiede conferma. Secondo tocco entro 5 secondi: esegue.
+function arm(btn, armedText, action) {
+  const original = btn.textContent; let t;
+  btn.addEventListener('click', () => {
+    if (btn.hasAttribute('data-armed')) { clearTimeout(t); btn.removeAttribute('data-armed'); btn.textContent = original; action(); return; }
+    btn.setAttribute('data-armed', ''); btn.textContent = armedText;
+    t = setTimeout(() => { btn.removeAttribute('data-armed'); btn.textContent = original; }, 5000);
+  });
+}
+
+async function doSwap(targetId, btn) {
+  btn.disabled = true;
+  try {
+    const r = await call('POST', { action: 'swap', token: state.token, targetId });
+    if (!r.ok) { toast(ERR[r.error] || ERR.errore_server); }
+    else { toast('Scambio fatto. Ti ho scritto una email con il nuovo orario.'); }
+  } catch (e) { toast(ERR.errore_server); }
+  await refreshMine(); loadSlots();
+}
+
+$('#swap-toggle').addEventListener('change', async e => {
+  const want = e.target.checked;
+  try {
+    const r = await call('POST', { action: 'setSwap', token: state.token, enabled: want });
+    if (!r.ok) { e.target.checked = !want; toast(ERR[r.error] || ERR.errore_server); return; }
+    toast(want ? 'Ora gli altri clienti possono proporti uno scambio.' : 'Scambio disattivato.');
+  } catch (x) { e.target.checked = !want; toast(ERR.errore_server); }
+});
+
+arm($('#cancel-btn'), 'Conferma annullamento', async () => {
+  try {
+    const r = await call('POST', { action: 'cancel', token: state.token });
+    if (!r.ok) { toast(ERR[r.error] || ERR.errore_server); return; }
+    saveToken(null); hideMine(); loadSlots();
+    toast('Appuntamento annullato.');
+    $('#prenota').scrollIntoView({ behavior: 'smooth' });
+  } catch (e) { toast(ERR.errore_server); }
+});
+
+/* ═════════ AVVIO ═════════ */
+(function init() {
+  const m = location.hash.match(/gestisci=([a-f0-9]{32,128})/i);
+  if (m) { saveToken(m[1]); history.replaceState(null, '', location.pathname + location.search); }
+  else state.token = loadToken();
+  loadSlots();
+  refreshMine().then(() => { if (m && !$('#gestisci').hidden) $('#gestisci').scrollIntoView(); });
+})();
+</script>
+</body>
+</html>
