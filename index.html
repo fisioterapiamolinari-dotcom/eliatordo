@@ -112,7 +112,7 @@
 
   <section class="hero">
     <h1>Prenota con Elia</h1>
-    <p>Sedute da 45 minuti. Scegli un orario libero qui sotto, inserisci i tuoi dati e ricevi la conferma via email.</p>
+    <p>Sedute da 60 minuti. Scegli un orario libero qui sotto, inserisci i tuoi dati e ricevi la conferma via email.</p>
   </section>
 
   <main>
@@ -189,7 +189,7 @@
 <script>
 /* ═════════ CONFIGURAZIONE ═════════ */
 const CONFIG = {
-  API: 'INCOLLA_QUI_URL_WEB_APP_APPS_SCRIPT',   // https://script.google.com/macros/s/.../exec
+  API: 'https://script.google.com/macros/s/AKfycbwmq0Yqk9ZjXWuaZeTqgrUePJ6D_jcOVkfLkON9BSeHs-N2azX5O1a2vbH7SQWa8fZ07Q/exec',   // https://script.google.com/macros/s/.../exec
   DAYS_AHEAD: 42,                                // deve essere <= DAYS_AHEAD di Code.gs
   GIORNI_INIZIALI: 7                             // giorni con orari mostrati all'apertura
 };
@@ -284,7 +284,7 @@ $('#more').addEventListener('click', () => { state.shown += 7; renderDays(); });
 const dlg = $('#dlg');
 function openBooking(ymd, time) {
   state.selected = { date: ymd, time };
-  $('#dlg-when').textContent = fmtLong(ymd) + ' alle ' + time + ' · 45 minuti';
+  $('#dlg-when').textContent = fmtLong(ymd) + ' alle ' + time + ' · 60 minuti';
   $('#form-error').textContent = '';
   $('#dlg-form-wrap').hidden = false; $('#dlg-done').hidden = true;
   $('#submit-btn').disabled = false; $('#submit-btn').textContent = 'Conferma prenotazione';
