@@ -231,34 +231,54 @@ async function call(method, payload) {
     const r = method === 'GET'
       ? await fetch(CONFIG.API + '?' + new URLSearchParams(payload), { signal: ctrl.signal, cache: 'no-store' })
       : await fetch(CONFIG.API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), signal: ctrl.signal });
-    return await r.json();
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const testo = await r.text();
+    try { return JSON.parse(testo); }
+    catch (e) { throw new Error('Risposta non JSON: ' + testo.slice(0, 120)); }
   } finally { clearTimeout(timer); }
 }
 
 /* ═════════ ORARI LIBERI ═════════ */
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+async function loadRange(da, a) {
+  const r = await call('GET', { action: 'getSlotsRange', from: ymdOf(da), to: ymdOf(a) });
+  if (!r.ok) throw new Error(r.error);
+  Object.assign(state.days, r.giorni || {});
+}
+
+// Fase 1: prossimi 7 giorni, una chiamata sola (veloce).
+// Fase 2: il resto della finestra, subito dopo, in background.
 async function loadSlots() {
-  const from = new Date(), to = new Date();
-  to.setDate(to.getDate() + CONFIG.DAYS_AHEAD);
+  const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+  const fine1 = addDays(oggi, 6), fine2 = addDays(oggi, CONFIG.DAYS_AHEAD);
+  state.caricoResto = true;
   try {
-    const r = await call('GET', { action: 'getSlotsRange', from: ymdOf(from), to: ymdOf(to) });
-    if (!r.ok) throw new Error(r.error);
-    state.days = r.giorni || {};
+    await loadRange(oggi, fine1);
     renderDays();
   } catch (e) {
-    console.warn(e);
+    console.warn('Orari non letti:', e.message);
+    state.caricoResto = false;
     const box = $('#days'); box.replaceChildren();
     const p = el('p', 'empty', 'Non riesco a leggere gli orari. ');
     const b = el('button', 'btn btn-quiet', 'Riprova'); b.type = 'button';
     b.addEventListener('click', () => { box.replaceChildren(el('p', 'loading', 'Carico gli orari…')); loadSlots(); });
     p.append(b); box.append(p); $('#more').hidden = true;
+    return;
   }
+  try { await loadRange(addDays(fine1, 1), fine2); }
+  catch (e) { console.warn('Giorni successivi non letti:', e.message); }
+  state.caricoResto = false;
+  renderDays();
 }
 
 function renderDays() {
   const box = $('#days'); box.replaceChildren();
   const keys = Object.keys(state.days).filter(k => state.days[k].length).sort();
   if (!keys.length) {
-    box.append(el('p', 'empty', 'Non ci sono orari liberi nei prossimi giorni. Riprova più tardi.'));
+    box.append(el('p', state.caricoResto ? 'loading' : 'empty', state.caricoResto
+      ? 'Questa settimana è piena. Carico i giorni successivi…'
+      : 'Non ci sono orari liberi nei prossimi giorni. Riprova più tardi.'));
     $('#more').hidden = true; return;
   }
   keys.slice(0, state.shown).forEach(ymd => {
@@ -277,6 +297,7 @@ function renderDays() {
     row.append(label, chips); box.append(row);
   });
   $('#more').hidden = keys.length <= state.shown;
+  if (state.caricoResto) box.append(el('p', 'loading', 'Carico i giorni successivi…'));
 }
 $('#more').addEventListener('click', () => { state.shown += 7; renderDays(); });
 
