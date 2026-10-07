@@ -76,6 +76,15 @@ section{display:flex;flex-direction:column;gap:14px}
 .field .err{font-size:13px;color:var(--danger);min-height:0}
 @media (max-width:380px){.fields{grid-template-columns:1fr}}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.me{display:flex;align-items:center;gap:14px;padding:16px 16px 16px 20px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.me-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+.me-txt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me-txt span{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me .btn{height:44px;padding:0 16px;font-size:15px}
+.check{display:flex;align-items:center;gap:12px;min-height:44px;font-size:15px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--accent);margin:0;flex:0 0 auto}
+.linkbtn{background:none;border:none;padding:0;min-height:44px;color:var(--muted);text-decoration:underline;font-size:14px;align-self:flex-start}
+.linkbtn:hover{color:var(--ink)}
 
 .alert{padding:14px 16px;border-radius:var(--radius);background:#2A1714;border:1px solid #5C2A22;color:#FFD3CB;font-size:15px}
 .alert button{margin-top:10px}
@@ -154,6 +163,10 @@ footer{font-size:13px;color:var(--faint);text-align:center}
 
       <section id="form-sec" aria-labelledby="l-you" hidden>
         <h2 class="label" id="l-you">I tuoi dati</h2>
+        <div class="me" id="me" hidden>
+          <div class="me-txt"><span>Prenoti come</span><b id="me-name"></b><span id="me-contact"></span></div>
+          <button type="button" class="btn ghost" id="me-edit">Modifica</button>
+        </div>
         <form id="form" novalidate>
           <div class="fields">
             <div class="field"><label for="f-nome">Nome</label><input id="f-nome" name="nome" autocomplete="given-name" maxlength="40" required><span class="err" id="e-nome"></span></div>
@@ -162,7 +175,9 @@ footer{font-size:13px;color:var(--faint);text-align:center}
             <div class="field full"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="100" required><span class="err" id="e-email"></span></div>
           </div>
           <div class="hp" aria-hidden="true"><label for="f-web">Non compilare</label><input id="f-web" name="website" tabindex="-1" autocomplete="off"></div>
+          <label class="check" style="margin-top:8px"><input type="checkbox" id="f-remember" checked> Ricorda i miei dati su questo telefono</label>
         </form>
+        <button type="button" class="linkbtn" id="forget" hidden>Non sei tu? Cancella i dati salvati</button>
         <p class="note">Ti arriva una mail di conferma con il link per annullare o scambiare la seduta, e un promemoria il giorno prima.</p>
         <div id="book-err" class="alert" role="alert" hidden></div>
       </section>
@@ -286,6 +301,32 @@ function saveToken(t) { try { localStorage.setItem(TOKEN_KEY, t); } catch (e) { 
 function readToken() { try { return localStorage.getItem(TOKEN_KEY); } catch (e) { console.warn('localStorage non disponibile', e); return null; } }
 function dropToken() { try { localStorage.removeItem(TOKEN_KEY); } catch (e) { console.warn('localStorage non disponibile', e); } }
 
+// Dati del cliente: restano solo su questo dispositivo, per non riscriverli a ogni prenotazione
+const DATA_KEY = 'elia_dati';
+const DATA_FIELDS = { nome: 'f-nome', cognome: 'f-cognome', telefono: 'f-tel', email: 'f-email' };
+function saveData(d) { try { localStorage.setItem(DATA_KEY, JSON.stringify(d)); } catch (e) { console.warn('localStorage non disponibile', e); } }
+function readData() {
+  try {
+    const d = JSON.parse(localStorage.getItem(DATA_KEY) || 'null');
+    return d && typeof d === 'object' && d.nome && d.email ? d : null;
+  } catch (e) { console.warn('dati salvati illeggibili', e); return null; }
+}
+function dropData() { try { localStorage.removeItem(DATA_KEY); } catch (e) { console.warn('localStorage non disponibile', e); } }
+
+// Con dati salvati il modulo si chiude in una riga "Prenoti come …"
+function applySaved() {
+  const d = readData();
+  if (d) Object.entries(DATA_FIELDS).forEach(([k, id]) => { $(id).value = String(d[k] || ''); });
+  $('me').hidden = !d;
+  $('form').hidden = !!d;
+  $('forget').hidden = !d;
+  if (d) {
+    $('me-name').textContent = (d.nome + ' ' + (d.cognome || '')).trim();
+    $('me-contact').textContent = [d.telefono, d.email].filter(Boolean).join(' · ');
+  }
+}
+function openForm() { $('me').hidden = true; $('form').hidden = false; }
+
 /* ═══════════ UTILITÀ DOM ═══════════ */
 const $ = (id) => document.getElementById(id);
 function el(tag, attrs, ...kids) {
@@ -407,7 +448,7 @@ async function book() {
   if (!S.slot || S.sending) return;
   $('form-sec').hidden = false;
   const bad = validate();
-  if (bad) { bad.focus(); bad.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+  if (bad) { openForm(); bad.focus(); bad.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
   S.sending = true; $('book-err').hidden = true;
   busy($('book'), true, 'Prenoto…');
   const body = {
@@ -429,12 +470,14 @@ async function book() {
       return;
     }
     if (res.token && res.token.length >= 32) saveToken(res.token);
+    if ($('f-remember').checked) saveData({ nome: body.nome, cognome: body.cognome, telefono: body.telefono, email: body.email });
+    else dropData();
     $('done-title').textContent = 'Ci vediamo in sala, ' + body.nome;
     $('done-when').textContent = cap(shortDay(body.date)) + ' · ' + body.time;
     $('done-where').textContent = cap(longDay(body.date)) + ' · ' + PLACE;
     $('done-manage').href = '#gestisci=' + (res.token || '');
     $('done-manage').hidden = !(res.token && res.token.length >= 32);
-    $('form').reset(); S.slot = null;
+    $('form').reset(); applySaved(); S.slot = null;
     show('done');
   } catch (e) {
     console.error('book', e);
@@ -548,6 +591,14 @@ window.addEventListener('hashchange', route);
 $('retry').addEventListener('click', loadSlots);
 $('book').addEventListener('click', book);
 $('form').addEventListener('submit', (e) => { e.preventDefault(); book(); });
+$('me-edit').addEventListener('click', () => { openForm(); $('f-nome').focus(); });
+$('forget').addEventListener('click', () => {
+  dropData(); dropToken();
+  $('form').reset(); applySaved(); openForm();
+  $('mine-link').hidden = true;
+  $('f-nome').focus();
+});
+applySaved();
 
 /* ═══════════ DEMO (solo se API_URL è vuoto) ═══════════ */
 const demo = (() => {
