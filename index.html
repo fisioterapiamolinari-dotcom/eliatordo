@@ -1,450 +1,591 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prenota con Elia Tordo</title>
-<meta name="description" content="Scegli un orario libero e prenota il tuo appuntamento con Elia Tordo.">
-<link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+<meta name="description" content="Prenota la tua seduta di personal training con Elia Tordo al Club Via Mantova.">
+<meta name="theme-color" content="#0C0C0E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --accent: #f47920;
-    --accent-text: #b84d08;
-    --accent-soft: rgba(244,121,32,.10);
-    --bg: #f8f4ef;
-    --ink: #1a1a1a;
-    --muted: #66625c;
-    --white: #fff;
-    --line: rgba(26,26,26,.14);
-    --serif: 'DM Serif Display', Georgia, serif;
-    --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: var(--sans); color: var(--ink); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
-  :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+:root{
+  --bg:#0C0C0E; --surface:#17171A; --surface-2:#1F1F23; --line:#34342F; --line-soft:#26262A;
+  --ink:#F4F4F0; --muted:#A3A39C; --faint:#5E5E58;
+  --accent:#D4FF3A; --accent-ink:#0C0C0E; --accent-soft:#E8FF8F;
+  --danger:#FF8A7A; --radius:14px;
+  --display:'Unbounded',system-ui,sans-serif; --body:'Figtree',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}a:hover{color:var(--accent-soft)}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-  header { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; gap: 16px; }
-  .brand { font-family: var(--serif); font-size: 22px; }
-  .nav-link { font-size: 14px; font-weight: 500; color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 150px;display:flex;flex-direction:column;gap:32px}
+header{display:flex;align-items:center;justify-content:space-between;padding-top:24px}
+.who{display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:15px}
+.who b{display:block;font-weight:700}
+.who span{font-size:13px;color:var(--muted)}
+.round{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.round:hover{border-color:var(--accent);color:var(--accent)}
 
-  .hero { padding: 40px 0 36px; }
-  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 9vw, 64px); line-height: 1.02; letter-spacing: -.01em; }
-  .hero p { margin-top: 16px; max-width: 46ch; font-size: 18px; color: var(--muted); }
+h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(26px,8.2vw,44px);line-height:1.02;letter-spacing:-.02em;text-transform:uppercase}
+h1 em{font-style:normal;color:var(--accent)}
+.label{margin:0;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.note{font-size:14px;color:var(--muted);margin:0}
+section{display:flex;flex-direction:column;gap:14px}
 
-  h2 { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.15; }
-  .section { padding: 28px 0 48px; border-top: 1px solid var(--line); }
-  .section > .lead { margin: 6px 0 20px; color: var(--muted); max-width: 52ch; }
+.strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;margin:0 -20px;padding:2px 20px 8px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.day{flex:0 0 68px;height:92px;border-radius:16px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;scroll-snap-align:start;transition:transform .12s ease}
+.day:active{transform:scale(.96)}
+.day .wd{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.day .n{font-family:var(--display);font-weight:700;font-size:24px}
+.day .f{font-size:11px;color:var(--muted)}
+.day[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.day[aria-pressed="true"] .f{color:var(--accent-ink)}
+.day:disabled{background:transparent;border-style:dashed;color:var(--faint)}
+.day:disabled .f{color:var(--faint)}
 
-  .day { display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 16px 0; border-top: 1px solid var(--line); align-items: start; }
-  .day:first-child { border-top: 0; }
-  .day-label strong { display: block; font-weight: 700; }
-  .day-label span { color: var(--muted); font-size: 14px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { font: inherit; font-weight: 500; min-height: 44px; min-width: 76px; padding: 0 14px; background: var(--white); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: background .15s, border-color .15s; }
-  .chip:hover { background: var(--accent-soft); border-color: var(--accent); }
-  .empty, .loading { color: var(--muted); padding: 12px 0; }
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.slot{height:52px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.slot:hover{border-color:var(--muted)}
+.slot[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.empty{padding:20px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);text-align:center}
 
-  .btn { font: inherit; font-weight: 700; min-height: 48px; padding: 0 22px; border: 0; border-radius: 10px; background: var(--accent); color: var(--ink); cursor: pointer; transition: filter .15s; }
-  .btn:hover:not(:disabled) { filter: brightness(.94); }
-  .btn:disabled { opacity: .55; cursor: wait; }
-  .btn-quiet { background: transparent; border: 1px solid var(--line); font-weight: 500; }
-  .btn-danger { background: transparent; border: 1px solid var(--line); color: #a32414; font-weight: 500; }
-  .btn-danger[data-armed], .swap-btn[data-armed] { background: #a32414; border-color: #a32414; color: #fff; }
-  .more { margin-top: 12px; }
+.skel{background:linear-gradient(90deg,var(--surface) 0%,var(--surface-2) 50%,var(--surface) 100%);background-size:200% 100%;animation:sh 1.2s infinite linear;border:none}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skel{animation:none}.day{transition:none}}
 
-  /* gestione appuntamento */
-  .mine-when { font-family: var(--serif); font-size: 30px; line-height: 1.15; margin: 4px 0 20px; }
-  .opt { display: flex; gap: 12px; align-items: flex-start; padding: 16px 0; border-top: 1px solid var(--line); cursor: pointer; }
-  .opt input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--accent); flex: none; }
-  .opt small { display: block; color: var(--muted); }
-  .board-title { font-weight: 700; margin: 24px 0 4px; }
-  .swap-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-  .swap-btn { font: inherit; font-weight: 500; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--white); cursor: pointer; }
-  .swap-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
-  .cancel-wrap { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:14px;font-weight:600}
+.field input{height:54px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);padding:0 16px;font-size:17px;width:100%}
+.field input:focus{border-color:var(--accent)}
+.field input[aria-invalid="true"]{border-color:var(--danger)}
+.field .err{font-size:13px;color:var(--danger);min-height:0}
+@media (max-width:380px){.fields{grid-template-columns:1fr}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
-  footer { padding: 28px 0 56px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
-  footer a { color: inherit; }
+.alert{padding:14px 16px;border-radius:var(--radius);background:#2A1714;border:1px solid #5C2A22;color:#FFD3CB;font-size:15px}
+.alert button{margin-top:10px}
+.demo{padding:10px 14px;border-radius:var(--radius);border:1px dashed var(--line);font-size:13px;color:var(--muted)}
 
-  /* dialog */
-  dialog { border: 0; border-radius: 16px; padding: 0; width: calc(100% - 32px); max-width: 460px; max-height: calc(100% - 32px); color: var(--ink); background: var(--white); margin: auto; }
-  dialog::backdrop { background: rgba(26,26,26,.5); }
-  .dlg-body { padding: 26px 24px 24px; }
-  .dlg-close { float: right; font: inherit; font-size: 26px; line-height: 1; width: 44px; height: 44px; margin: -12px -12px 0 0; border: 0; background: none; cursor: pointer; border-radius: 10px; }
-  .dlg-when { margin: 6px 0 18px; color: var(--muted); }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-  .field input[type=text], .field input[type=tel], .field input[type=email] { width: 100%; font: inherit; font-size: 16px; min-height: 46px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); color: var(--ink); }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--muted); margin: 4px 0 16px; }
-  .consent input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
-  .consent a { color: var(--accent-text); }
-  .form-error { color: #a32414; font-size: 14px; min-height: 20px; margin-bottom: 8px; }
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .dlg-actions { display: flex; flex-direction: column; gap: 10px; }
-  .done-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; font-size: 24px; font-weight: 700; margin-bottom: 14px; }
+.bar{position:fixed;left:0;right:0;bottom:0;padding:14px 20px calc(18px + env(safe-area-inset-bottom));background:rgba(12,12,14,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line-soft);z-index:5}
+.bar-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.bar-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+.bar-txt span:first-child{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.bar-txt span:last-child{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 15px; max-width: calc(100% - 32px); z-index: 50; }
-  .toast[hidden] { display: none; }
-  [hidden] { display: none !important; }
+.btn{height:54px;padding:0 28px;border-radius:var(--radius);border:none;background:var(--accent);color:var(--accent-ink);font-size:17px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;flex:0 0 auto}
+.btn:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.btn:disabled{background:var(--line-soft);color:#77776F}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.danger{background:transparent;border:1px solid #5C2A22;color:var(--danger)}
+.btn.block{width:100%}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
 
-  @media (max-width: 560px) {
-    .day { grid-template-columns: 1fr; gap: 8px; }
-    .day-label strong, .day-label span { display: inline; }
-    .day-label span { margin-left: 8px; }
-    .row { grid-template-columns: 1fr; gap: 0; }
-    .swap-row { flex-direction: column; align-items: stretch; }
-  }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+.big-check{width:64px;height:64px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center}
+.card{border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:20px;display:flex;flex-direction:column;gap:4px}
+.card .when{font-family:var(--display);font-weight:700;font-size:22px;color:var(--accent);font-variant-numeric:tabular-nums}
+.card .where{color:var(--muted)}
+
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.toggle p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.switch{flex:0 0 auto;width:56px;height:32px;border-radius:16px;border:1px solid var(--line);background:var(--surface-2);position:relative;padding:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--muted);transition:left .15s ease}
+.switch[aria-checked="true"]{background:var(--accent);border-color:var(--accent)}
+.switch[aria-checked="true"]::after{left:27px;background:var(--accent-ink)}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px 12px 18px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line)}
+.item b{font-variant-numeric:tabular-nums}
+.item .btn{height:44px;padding:0 18px;font-size:15px}
+footer{font-size:13px;color:var(--faint);text-align:center}
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <header>
-    <div class="brand">Elia Tordo</div>
-    <a class="nav-link" id="nav-mine" href="#gestisci" hidden>Il mio appuntamento</a>
+    <div class="who">
+      <div class="avatar" aria-hidden="true">ET</div>
+      <div><b>Elia Tordo</b><span>Personal trainer · Club Via Mantova</span></div>
+    </div>
+    <a class="round" href="https://wa.me/393401865034" target="_blank" rel="noopener" aria-label="Scrivi a Elia su WhatsApp">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+    </a>
   </header>
 
-  <section class="hero">
-    <h1>Prenota con Elia</h1>
-    <p>Sedute da 60 minuti. Scegli un orario libero qui sotto, inserisci i tuoi dati e ricevi la conferma via email.</p>
-  </section>
+  <div id="demo" class="demo" hidden>Modalità demo: gli orari sono finti. Inserisci l'URL dello script in <code>API_URL</code> per collegare il calendario.</div>
 
-  <main>
-    <section class="section" id="prenota" aria-labelledby="t-orari">
-      <h2 id="t-orari">Orari liberi</h2>
-      <p class="lead">Tocca un orario per prenotarlo.</p>
-      <div id="days"><p class="loading">Carico gli orari…</p></div>
-      <button class="btn btn-quiet more" id="more" type="button" hidden>Mostra altri giorni</button>
-    </section>
+  <!-- ───── PRENOTA ───── -->
+  <main id="v-book">
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <h1>Prenota il tuo <em>allenamento</em></h1>
 
-    <section class="section" id="gestisci" aria-labelledby="t-mine" hidden>
-      <h2 id="t-mine">Il tuo appuntamento</h2>
-      <p class="mine-when" id="mine-when"></p>
+      <a id="mine-link" href="#" class="note" hidden>Hai già una seduta prenotata? Gestiscila qui</a>
 
-      <label class="opt" id="swap-opt">
-        <input type="checkbox" id="swap-toggle">
-        <span>Sono disponibile a scambiare
-          <small>Gli altri clienti vedranno solo data e ora, mai il tuo nome. Se qualcuno accetta lo scambio, l'orario cambia subito e ricevi una email.</small>
-        </span>
-      </label>
-
-      <div id="board-wrap">
-        <p class="board-title">Orari che altri clienti hanno messo a disposizione</p>
-        <div id="board"></div>
+      <div id="load-err" class="alert" role="alert" hidden>
+        Non riesco a leggere il calendario di Elia. Controlla la connessione e riprova.
+        <div><button type="button" class="btn ghost" id="retry">Riprova</button></div>
       </div>
 
-      <div class="cancel-wrap">
-        <button class="btn btn-danger" id="cancel-btn" type="button">Annulla appuntamento</button>
-      </div>
+      <section aria-labelledby="l-day">
+        <div class="row"><h2 class="label" id="l-day">Giorno</h2><span class="note" id="month"></span></div>
+        <div class="strip" id="days" role="group" aria-labelledby="l-day"></div>
+      </section>
+
+      <section aria-labelledby="l-time">
+        <div class="row"><h2 class="label" id="l-time">Orario</h2><span class="note">Sedute da 60 min</span></div>
+        <div class="slots" id="slots" role="group" aria-labelledby="l-time"></div>
+        <div id="slot-msg" class="alert" role="alert" hidden></div>
+      </section>
+
+      <section id="form-sec" aria-labelledby="l-you" hidden>
+        <h2 class="label" id="l-you">I tuoi dati</h2>
+        <form id="form" novalidate>
+          <div class="fields">
+            <div class="field"><label for="f-nome">Nome</label><input id="f-nome" name="nome" autocomplete="given-name" maxlength="40" required><span class="err" id="e-nome"></span></div>
+            <div class="field"><label for="f-cognome">Cognome</label><input id="f-cognome" name="cognome" autocomplete="family-name" maxlength="60" required><span class="err" id="e-cognome"></span></div>
+            <div class="field full"><label for="f-tel">Telefono</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" required><span class="err" id="e-tel"></span></div>
+            <div class="field full"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="100" required><span class="err" id="e-email"></span></div>
+          </div>
+          <div class="hp" aria-hidden="true"><label for="f-web">Non compilare</label><input id="f-web" name="website" tabindex="-1" autocomplete="off"></div>
+        </form>
+        <p class="note">Ti arriva una mail di conferma con il link per annullare o scambiare la seduta, e un promemoria il giorno prima.</p>
+        <div id="book-err" class="alert" role="alert" hidden></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ───── CONFERMA ───── -->
+  <main id="v-done" hidden>
+    <section aria-live="polite" style="gap:20px;padding-top:8px">
+      <div class="big-check"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h1 id="done-title">Ci vediamo in sala</h1>
+      <div class="card"><span class="when" id="done-when"></span><span class="where" id="done-where"></span></div>
+      <p class="note" style="font-size:16px">Ti ho mandato una mail di conferma. Dentro c'è il tuo link personale per annullare o scambiare la seduta: non condividerlo.</p>
+      <a class="btn ghost block" id="done-manage" href="#">Gestisci la prenotazione</a>
     </section>
   </main>
 
-  <footer>
-    <p>Elia Tordo · <a href="privacy-policy.html">Privacy</a></p>
-  </footer>
-</div>
+  <!-- ───── GESTISCI ───── -->
+  <main id="v-manage" hidden>
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <h1>La tua <em>seduta</em></h1>
+      <div id="m-loading" class="card skel" style="height:96px" aria-label="Caricamento"></div>
+      <div id="m-err" class="alert" role="alert" hidden></div>
 
-<dialog id="dlg" aria-labelledby="dlg-title">
-  <div class="dlg-body">
-    <button class="dlg-close" id="dlg-close" type="button" aria-label="Chiudi">&times;</button>
+      <div id="m-none" hidden style="display:flex;flex-direction:column;gap:16px">
+        <p style="margin:0">Non hai sedute in programma.</p>
+        <a class="btn block" href="#">Prenota una seduta</a>
+      </div>
 
-    <div id="dlg-form-wrap">
-      <h2 id="dlg-title">I tuoi dati</h2>
-      <p class="dlg-when" id="dlg-when"></p>
-      <form id="book-form" novalidate>
-        <div class="row">
-          <div class="field"><label for="f-nome">Nome</label><input type="text" id="f-nome" name="nome" autocomplete="given-name" required></div>
-          <div class="field"><label for="f-cognome">Cognome</label><input type="text" id="f-cognome" name="cognome" autocomplete="family-name" required></div>
+      <div id="m-body" hidden style="display:flex;flex-direction:column;gap:28px">
+        <div class="card"><span class="when" id="m-when"></span><span class="where" id="m-where"></span></div>
+
+        <p id="m-locked" class="note" style="font-size:16px" hidden>Mancano meno di 24 ore: non si può più annullare né scambiare da qui. Se hai un imprevisto <a href="https://wa.me/393401865034" target="_blank" rel="noopener">scrivi a Elia su WhatsApp</a>.</p>
+
+        <div id="m-tools" style="display:flex;flex-direction:column;gap:28px">
+          <section>
+            <h2 class="label">Scambio</h2>
+            <div class="toggle">
+              <div><b id="sw-lbl">Rendi il mio orario scambiabile</b><p>Altri clienti vedono solo giorno e ora, mai il tuo nome.</p></div>
+              <button type="button" class="switch" id="sw" role="switch" aria-checked="false" aria-labelledby="sw-lbl"></button>
+            </div>
+          </section>
+
+          <section>
+            <div class="row"><h2 class="label">Orari che puoi prendere</h2></div>
+            <p class="note">Sono le sedute che altri clienti hanno messo in scambio. Scegline una: i due orari si invertono.</p>
+            <div class="list" id="board"></div>
+          </section>
+
+          <section>
+            <h2 class="label">Annulla</h2>
+            <button type="button" class="btn danger block" id="cancel">Annulla la seduta</button>
+          </section>
         </div>
-        <div class="field"><label for="f-tel">Telefono</label><input type="tel" id="f-tel" name="telefono" autocomplete="tel" required></div>
-        <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" name="email" autocomplete="email" required></div>
-        <div class="hp" aria-hidden="true"><label>Sito web <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-        <label class="consent"><input type="checkbox" name="privacy" required>
-          <span>Ho letto l'<a href="privacy-policy.html" target="_blank" rel="noopener">informativa privacy</a>. Nel calendario comparirà solo il mio nome.</span></label>
-        <p class="form-error" id="form-error" role="alert"></p>
-        <button class="btn" id="submit-btn" type="submit" style="width:100%">Conferma prenotazione</button>
-      </form>
-    </div>
-
-    <div id="dlg-done" hidden>
-      <div class="done-icon" aria-hidden="true">✓</div>
-      <h2>Prenotazione confermata</h2>
-      <p class="dlg-when" id="done-when"></p>
-      <p style="margin-bottom:20px">Ti ho scritto una email con il link personale per annullare o scambiare l'appuntamento. Controlla anche la cartella spam.</p>
-      <div class="dlg-actions">
-        <button class="btn" id="done-go" type="button">Vai al mio appuntamento</button>
       </div>
     </div>
-  </div>
-</dialog>
+  </main>
 
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <footer>Elia Tordo · Personal trainer · Club Via Mantova</footer>
+</div>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div class="bar-txt" aria-live="polite"><span>Selezione</span><span id="summary">Scegli giorno e orario</span></div>
+    <button type="button" class="btn" id="book" disabled>Prenota</button>
+  </div>
+</div>
 
 <script>
-/* ═════════ CONFIGURAZIONE ═════════ */
-const CONFIG = {
-  API: 'https://script.google.com/macros/s/AKfycbwmq0Yqk9ZjXWuaZeTqgrUePJ6D_jcOVkfLkON9BSeHs-N2azX5O1a2vbH7SQWa8fZ07Q/exec',   // https://script.google.com/macros/s/.../exec
-  DAYS_AHEAD: 42,                                // deve essere <= DAYS_AHEAD di Code.gs
-  GIORNI_INIZIALI: 7                             // giorni con orari mostrati all'apertura
-};
-
+/* ═══════════ CONFIGURAZIONE ═══════════
+ * Incolla qui l'URL della distribuzione dell'Apps Script
+ * (Distribuisci → Nuova distribuzione → App web → "Chiunque").
+ * Se resta vuoto la pagina gira in modalità demo con orari finti. */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwC1THPEjidF9EWt_FB7YrZoL0DjGezWIX_6Edj3c7rXZdAm0jhMkV299q3yF9CqWJyig/exec';
+const TZ = 'Europe/Rome';
+const DAYS_AHEAD = 42;
+const PLACE = 'Club Via Mantova';
 const TOKEN_KEY = 'elia_token';
+
+/* ═══════════ DATE (sempre nel fuso di Roma, mai quello del telefono) ═══════════ */
+const WD = ['dom','lun','mar','mer','gio','ven','sab'];
+const WDL = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+const MOL = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+const todayYmd = () => new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+const parts = (ymd) => ymd.split('-').map(Number);
+const utc = (ymd) => { const [y, m, d] = parts(ymd); return new Date(Date.UTC(y, m - 1, d)); };
+const addDays = (ymd, n) => { const t = utc(ymd); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+const wday = (ymd) => utc(ymd).getUTCDay();
+const longDay = (ymd) => { const [, m, d] = parts(ymd); return WDL[wday(ymd)] + ' ' + d + ' ' + MOL[m - 1]; };
+const shortDay = (ymd) => { const [, m, d] = parts(ymd); return WD[wday(ymd)] + ' ' + d + ' ' + MOL[m - 1].slice(0, 3); };
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/* ═══════════ API ═══════════ */
+async function apiGet(params) {
+  if (!API_URL) return demo.get(params);
+  const r = await fetch(API_URL + '?' + new URLSearchParams(params));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+async function apiPost(body) {
+  if (!API_URL) return demo.post(body);
+  // text/plain evita la preflight CORS, che Apps Script non gestisce
+  const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
 const ERR = {
-  occupato: "Quell'orario è appena stato prenotato. Sceglierne un altro.",
-  gia_prenotato: "C'è già un appuntamento in programma con questa email. Usa il link nella email di conferma per cambiarlo.",
-  dati_non_validi: "Controlla i dati inseriti.",
-  token_non_valido: "Il link personale non è più valido.",
-  non_disponibile: "Questo orario non è più disponibile per lo scambio.",
-  troppo_vicino: "Mancano troppe poche ore all'appuntamento: contatta Elia direttamente.",
-  errore_server: "Qualcosa non ha funzionato. Riprova tra poco."
+  dati_non_validi: 'Qualcosa nei dati non torna: controlla i campi e riprova.',
+  occupato: 'Qualcuno ti ha preceduto su questo orario. Scegline un altro.',
+  gia_prenotato: 'Hai già una seduta in programma. Per cambiarla usa il link nella mail di conferma.',
+  token_non_valido: 'Questo link non è valido, oppure la seduta è già stata annullata.',
+  troppo_vicino: 'Mancano meno di 24 ore: per modifiche scrivi a Elia su WhatsApp.',
+  non_disponibile: 'Quell\'orario non è più disponibile per lo scambio.',
+  errore_server: 'Il server ha avuto un problema. Riprova tra poco.',
+  rete: 'Non riesco a raggiungere il server. Controlla la connessione e riprova.'
 };
+const errText = (code) => ERR[code] || ERR.errore_server;
 
-const $ = (s, r) => (r || document).querySelector(s);
-const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-const pad = n => String(n).padStart(2, '0');
-const ymdOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-const dateOf = ymd => new Date(ymd + 'T12:00:00');
-const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-const fmtLong = ymd => cap(dateOf(ymd).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }));
+/* ═══════════ STORAGE (solo comodità: il link nella mail resta la via ufficiale) ═══════════ */
+function saveToken(t) { try { localStorage.setItem(TOKEN_KEY, t); } catch (e) { console.warn('localStorage non disponibile', e); } }
+function readToken() { try { return localStorage.getItem(TOKEN_KEY); } catch (e) { console.warn('localStorage non disponibile', e); return null; } }
+function dropToken() { try { localStorage.removeItem(TOKEN_KEY); } catch (e) { console.warn('localStorage non disponibile', e); } }
 
-const state = { days: {}, shown: CONFIG.GIORNI_INIZIALI, selected: null, token: null };
-
-function loadToken() { try { return localStorage.getItem(TOKEN_KEY); } catch (e) { return null; } }
-function saveToken(t) { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch (e) {} state.token = t || null; }
-
-let toastTimer;
-function toast(msg) {
-  const t = $('#toast'); t.textContent = msg; t.hidden = false;
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 4500);
+/* ═══════════ UTILITÀ DOM ═══════════ */
+const $ = (id) => document.getElementById(id);
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  Object.entries(attrs || {}).forEach(([k, v]) => {
+    if (k === 'on') Object.entries(v).forEach(([ev, fn]) => n.addEventListener(ev, fn));
+    else if (k === 'class') n.className = v;
+    else if (v === true) n.setAttribute(k, '');
+    else if (v !== false && v != null) n.setAttribute(k, v);
+  });
+  kids.flat().forEach((c) => n.append(c));
+  return n;
+}
+function busy(btn, on, label) {
+  btn.disabled = on;
+  btn.replaceChildren(...(on ? [el('span', { class: 'spin', 'aria-hidden': 'true' }), label] : [label]));
+}
+function show(view) {
+  ['book', 'done', 'manage'].forEach((v) => { $('v-' + v).hidden = v !== view; });
+  $('bar').hidden = view !== 'book';
+  window.scrollTo(0, 0);
 }
 
-async function call(method, payload) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 25000);
-  try {
-    const r = method === 'GET'
-      ? await fetch(CONFIG.API + '?' + new URLSearchParams(payload), { signal: ctrl.signal, cache: 'no-store' })
-      : await fetch(CONFIG.API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), signal: ctrl.signal });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const testo = await r.text();
-    try { return JSON.parse(testo); }
-    catch (e) { throw new Error('Risposta non JSON: ' + testo.slice(0, 120)); }
-  } finally { clearTimeout(timer); }
-}
+/* ═══════════ PRENOTA ═══════════ */
+const S = { giorni: null, day: null, slot: null, sending: false };
 
-/* ═════════ ORARI LIBERI ═════════ */
-const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
-const SLOTS_KEY = 'elia_slots';
-function salvaSlots(g) { try { localStorage.setItem(SLOTS_KEY, JSON.stringify({ t: Date.now(), g })); } catch (e) {} }
-function slotsSalvati() {
-  try { const v = JSON.parse(localStorage.getItem(SLOTS_KEY) || 'null'); if (v && Date.now() - v.t < 6 * 3600000) return v.g; } catch (e) {}
-  return null;
-}
-
-// 1) Mostra subito gli ultimi orari salvati su questo dispositivo (se ci sono).
-// 2) Chiede gli orari aggiornati allo script (che li ha già pronti) e ridisegna.
 async function loadSlots() {
-  const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
-  if (!Object.keys(state.days).length) {
-    const vecchi = slotsSalvati();
-    if (vecchi) state.days = vecchi;
-  }
-  state.aggiorno = true;
-  if (Object.keys(state.days).length) renderDays();
+  $('load-err').hidden = true;
+  renderSkeleton();
+  const from = todayYmd();
   try {
-    const r = await call('GET', { action: 'getSlotsRange', from: ymdOf(oggi), to: ymdOf(addDays(oggi, CONFIG.DAYS_AHEAD)) });
-    if (!r.ok) throw new Error(r.error);
-    state.days = r.giorni || {};
-    salvaSlots(state.days);
-    state.aggiorno = false;
-    renderDays();
+    const res = await apiGet({ action: 'getSlotsRange', from, to: addDays(from, DAYS_AHEAD) });
+    if (!res.ok) throw new Error(res.error || 'errore_server');
+    S.giorni = res.giorni || {};
+    const keys = Object.keys(S.giorni).sort();
+    if (!S.day || !(S.giorni[S.day] || []).length) S.day = keys.find((k) => S.giorni[k].length) || keys[0] || null;
+    if (S.slot && !(S.giorni[S.day] || []).includes(S.slot)) S.slot = null;
+    renderDays(); renderSlots(); renderBar();
   } catch (e) {
-    console.warn('Orari non letti:', e.message);
-    state.aggiorno = false;
-    if (Object.keys(state.days).length) { renderDays(); return; }
-    const box = $('#days'); box.replaceChildren();
-    const p = el('p', 'empty', 'Non riesco a leggere gli orari. ');
-    const b = el('button', 'btn btn-quiet', 'Riprova'); b.type = 'button';
-    b.addEventListener('click', () => { box.replaceChildren(el('p', 'loading', 'Carico gli orari…')); loadSlots(); });
-    p.append(b); box.append(p); $('#more').hidden = true;
+    console.error('getSlotsRange', e);
+    $('days').replaceChildren(); $('slots').replaceChildren();
+    $('load-err').hidden = false;
   }
+}
+
+function renderSkeleton() {
+  $('days').replaceChildren(...Array.from({ length: 6 }, () => el('div', { class: 'day skel', 'aria-hidden': 'true' })));
+  $('slots').replaceChildren(...Array.from({ length: 9 }, () => el('div', { class: 'slot skel', 'aria-hidden': 'true' })));
 }
 
 function renderDays() {
-  const box = $('#days'); box.replaceChildren();
-  const oggi = ymdOf(new Date());
-  const keys = Object.keys(state.days).filter(k => k >= oggi && state.days[k].length).sort();
-  if (!keys.length) {
-    box.append(el('p', state.aggiorno ? 'loading' : 'empty', state.aggiorno
-      ? 'Carico gli orari…'
-      : 'Non ci sono orari liberi nei prossimi giorni. Riprova più tardi.'));
-    $('#more').hidden = true; return;
+  const today = todayYmd(), tomorrow = addDays(today, 1);
+  const keys = Object.keys(S.giorni).sort();
+  $('days').replaceChildren(...keys.map((ymd) => {
+    const n = S.giorni[ymd].length, [, m, d] = parts(ymd);
+    const closed = wday(ymd) === 0;
+    const wd = ymd === today ? 'oggi' : ymd === tomorrow ? 'domani' : WD[wday(ymd)];
+    return el('button', {
+      type: 'button', class: 'day', 'data-ymd': ymd, disabled: n === 0,
+      'aria-pressed': String(ymd === S.day),
+      'aria-label': longDay(ymd) + (n ? ', ' + n + (n === 1 ? ' orario libero' : ' orari liberi') : closed ? ', chiuso' : ', pieno'),
+      on: { click: () => { S.day = ymd; S.slot = null; $('slot-msg').hidden = true; renderDays(); renderSlots(); renderBar(); } }
+    }, el('span', { class: 'wd' }, wd), el('span', { class: 'n' }, String(d)),
+       el('span', { class: 'f' }, n ? n + (n === 1 ? ' libero' : ' liberi') : closed ? 'chiuso' : 'pieno'));
+  }));
+  if (S.day) {
+    const [y, m] = parts(S.day);
+    $('month').textContent = cap(MOL[m - 1]) + ' ' + y;
+    const sel = $('days').querySelector('[aria-pressed="true"]');
+    if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
   }
-  keys.slice(0, state.shown).forEach(ymd => {
-    const d = dateOf(ymd);
-    const row = el('div', 'day');
-    const label = el('div', 'day-label');
-    label.append(el('strong', null, cap(d.toLocaleDateString('it-IT', { weekday: 'long' }))),
-                 el('span', null, d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })));
-    const chips = el('div', 'chips');
-    state.days[ymd].forEach(t => {
-      const b = el('button', 'chip', t); b.type = 'button';
-      b.setAttribute('aria-label', fmtLong(ymd) + ' alle ' + t);
-      b.addEventListener('click', () => openBooking(ymd, t));
-      chips.append(b);
-    });
-    row.append(label, chips); box.append(row);
+}
+
+function renderSlots() {
+  const list = (S.day && S.giorni[S.day]) || [];
+  if (!list.length) {
+    $('slots').replaceChildren(el('div', { class: 'empty', style: 'grid-column:1/-1' }, 'Nessun orario libero in questo giorno.'));
+    return;
+  }
+  $('slots').replaceChildren(...list.map((hm) => el('button', {
+    type: 'button', class: 'slot', 'aria-pressed': String(hm === S.slot),
+    'aria-label': longDay(S.day) + ' alle ' + hm,
+    on: { click: () => {
+      const first = !S.slot;
+      S.slot = hm; $('slot-msg').hidden = true; renderSlots(); renderBar();
+      $('form-sec').hidden = false;
+      if (first) $('form-sec').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } }
+  }, hm)));
+}
+
+function renderBar() {
+  $('summary').textContent = S.slot ? cap(shortDay(S.day)) + ' · ' + S.slot : S.day ? 'Scegli un orario' : 'Scegli giorno e orario';
+  $('book').disabled = !S.slot || S.sending;
+}
+
+const RULES = {
+  nome: [(v) => v.length >= 2, 'Scrivi il tuo nome.'],
+  cognome: [(v) => v.length >= 2, 'Scrivi il tuo cognome.'],
+  tel: [(v) => /^[+0-9 ()\-]{6,}$/.test(v), 'Inserisci un numero di telefono valido.'],
+  email: [(v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Inserisci un indirizzo email valido.']
+};
+function validate() {
+  let first = null;
+  Object.entries(RULES).forEach(([k, [ok, msg]]) => {
+    const inp = $('f-' + k), v = inp.value.trim(), bad = !ok(v);
+    inp.setAttribute('aria-invalid', String(bad));
+    inp.setAttribute('aria-describedby', 'e-' + k);
+    $('e-' + k).textContent = bad ? msg : '';
+    if (bad && !first) first = inp;
   });
-  $('#more').hidden = keys.length <= state.shown;
+  return first;
 }
-$('#more').addEventListener('click', () => { state.shown += 7; renderDays(); });
+Object.keys(RULES).forEach((k) => $('f-' + k).addEventListener('input', () => {
+  if ($('f-' + k).getAttribute('aria-invalid') === 'true') validate();
+}));
 
-/* ═════════ PRENOTAZIONE ═════════ */
-const dlg = $('#dlg');
-function openBooking(ymd, time) {
-  state.selected = { date: ymd, time };
-  $('#dlg-when').textContent = fmtLong(ymd) + ' alle ' + time + ' · 60 minuti';
-  $('#form-error').textContent = '';
-  $('#dlg-form-wrap').hidden = false; $('#dlg-done').hidden = true;
-  $('#submit-btn').disabled = false; $('#submit-btn').textContent = 'Conferma prenotazione';
-  dlg.showModal();
-  $('#f-nome').focus();
-}
-$('#dlg-close').addEventListener('click', () => dlg.close());
-dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-
-$('#book-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const f = e.target, v = n => f.elements[n].value.trim(), err = $('#form-error');
-  if (v('nome').length < 2 || v('cognome').length < 2) { err.textContent = 'Inserisci nome e cognome.'; return; }
-  if (!/^[+0-9 ()\-]{6,}$/.test(v('telefono'))) { err.textContent = 'Inserisci un numero di telefono valido.'; return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email'))) { err.textContent = 'Inserisci un indirizzo email valido.'; return; }
-  if (!f.elements.privacy.checked) { err.textContent = "Per prenotare serve confermare di aver letto l'informativa privacy."; return; }
-  err.textContent = '';
-
-  const btn = $('#submit-btn'); btn.disabled = true; btn.textContent = 'Invio in corso…';
+async function book() {
+  if (!S.slot || S.sending) return;
+  $('form-sec').hidden = false;
+  const bad = validate();
+  if (bad) { bad.focus(); bad.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+  S.sending = true; $('book-err').hidden = true;
+  busy($('book'), true, 'Prenoto…');
+  const body = {
+    action: 'book', date: S.day, time: S.slot,
+    nome: $('f-nome').value.trim(), cognome: $('f-cognome').value.trim(),
+    telefono: $('f-tel').value.trim(), email: $('f-email').value.trim(),
+    website: $('f-web').value
+  };
   try {
-    const r = await call('POST', {
-      action: 'book', date: state.selected.date, time: state.selected.time,
-      nome: v('nome'), cognome: v('cognome'), telefono: v('telefono'), email: v('email'), website: v('website')
-    });
-    if (!r.ok) {
-      err.textContent = ERR[r.error] || ERR.errore_server;
-      btn.disabled = false; btn.textContent = 'Conferma prenotazione';
-      if (r.error === 'occupato') { loadSlots(); }
+    const res = await apiPost(body);
+    if (!res.ok) {
+      if (res.error === 'occupato') {
+        $('slot-msg').textContent = errText('occupato'); $('slot-msg').hidden = false;
+        S.slot = null; await loadSlots();
+        $('slot-msg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        $('book-err').textContent = errText(res.error); $('book-err').hidden = false;
+      }
       return;
     }
-    saveToken(r.token);
-    const sel = state.selected;
-    if (state.days[sel.date]) state.days[sel.date] = state.days[sel.date].filter(x => x !== sel.time);
-    renderDays();
-    $('#done-when').textContent = fmtLong(state.selected.date) + ' alle ' + state.selected.time;
-    $('#dlg-form-wrap').hidden = true; $('#dlg-done').hidden = false;
-    f.reset();
-    loadSlots(); refreshMine();
-  } catch (x) {
-    console.error(x);
-    err.textContent = ERR.errore_server;
-    btn.disabled = false; btn.textContent = 'Conferma prenotazione';
+    if (res.token && res.token.length >= 32) saveToken(res.token);
+    $('done-title').textContent = 'Ci vediamo in sala, ' + body.nome;
+    $('done-when').textContent = cap(shortDay(body.date)) + ' · ' + body.time;
+    $('done-where').textContent = cap(longDay(body.date)) + ' · ' + PLACE;
+    $('done-manage').href = '#gestisci=' + (res.token || '');
+    $('done-manage').hidden = !(res.token && res.token.length >= 32);
+    $('form').reset(); S.slot = null;
+    show('done');
+  } catch (e) {
+    console.error('book', e);
+    $('book-err').textContent = errText('rete'); $('book-err').hidden = false;
+  } finally {
+    S.sending = false;
+    busy($('book'), false, 'Prenota'); renderBar();
   }
-});
-$('#done-go').addEventListener('click', () => {
-  dlg.close();
-  $('#gestisci').scrollIntoView({ behavior: 'smooth' });
-});
+}
 
-/* ═════════ IL MIO APPUNTAMENTO + SCAMBIO ═════════ */
-function hideMine() { $('#gestisci').hidden = true; $('#nav-mine').hidden = true; }
+/* ═══════════ GESTISCI ═══════════ */
+let TOKEN = null;
+function mErr(code) { $('m-err').textContent = errText(code); $('m-err').hidden = false; }
 
-async function refreshMine() {
-  if (!state.token) { hideMine(); return; }
+async function loadManage(token) {
+  TOKEN = token;
+  show('manage');
+  ['m-err', 'm-none', 'm-body'].forEach((id) => { $(id).hidden = true; });
+  $('m-loading').hidden = false;
   try {
-    const r = await call('GET', { action: 'getMine', token: state.token });
-    if (!r.ok || !r.booking) { saveToken(null); hideMine(); return; }
-    const b = r.booking;
-    $('#mine-when').textContent = fmtLong(b.date) + ' alle ' + b.time;
-    const tg = $('#swap-toggle'); tg.checked = !!b.swapOk; tg.disabled = !b.modificabile;
-    $('#swap-opt').hidden = !b.modificabile; $('#board-wrap').hidden = !b.modificabile;
-    $('#cancel-btn').hidden = !b.modificabile;
-    $('#gestisci').hidden = false; $('#nav-mine').hidden = false;
+    const res = await apiGet({ action: 'getMine', token });
+    $('m-loading').hidden = true;
+    if (!res.ok) { if (res.error === 'token_non_valido') dropToken(); mErr(res.error); return; }
+    if (!res.booking) { dropToken(); $('m-none').hidden = false; return; }
+    saveToken(token);
+    const b = res.booking;
+    $('m-when').textContent = cap(shortDay(b.date)) + ' · ' + b.time;
+    $('m-where').textContent = cap(longDay(b.date)) + ' · ' + PLACE;
+    $('m-locked').hidden = b.modificabile;
+    $('m-tools').hidden = !b.modificabile;
+    $('sw').setAttribute('aria-checked', String(!!b.swapOk));
+    $('m-body').hidden = false;
     if (b.modificabile) loadBoard();
-  } catch (e) { console.warn(e); }
+  } catch (e) {
+    console.error('getMine', e);
+    $('m-loading').hidden = true; mErr('rete');
+  }
 }
 
 async function loadBoard() {
-  const box = $('#board');
+  const box = $('board');
+  box.replaceChildren(el('div', { class: 'item skel', style: 'height:70px', 'aria-hidden': 'true' }));
   try {
-    const r = await call('GET', { action: 'getSwapBoard', token: state.token });
-    box.replaceChildren();
-    if (!r.ok || !r.items.length) {
-      box.append(el('p', 'empty', 'Al momento nessun cliente ha messo a disposizione il proprio orario.'));
+    const res = await apiGet({ action: 'getSwapBoard', token: TOKEN });
+    if (!res.ok) throw new Error(res.error);
+    if (!res.canSwap || !res.items.length) {
+      box.replaceChildren(el('div', { class: 'empty' }, 'Per ora nessuno ha messo in scambio la propria seduta.'));
       return;
     }
-    r.items.forEach(it => {
-      const row = el('div', 'swap-row');
-      row.append(el('span', null, fmtLong(it.date) + ' alle ' + it.time));
-      const b = el('button', 'swap-btn', 'Scambia con questo'); b.type = 'button';
-      arm(b, 'Conferma lo scambio', () => doSwap(it.id, b));
-      row.append(b); box.append(row);
-    });
-  } catch (e) { box.replaceChildren(el('p', 'empty', 'Non riesco a leggere gli scambi disponibili.')); }
+    box.replaceChildren(...res.items.map((it) => {
+      const btn = el('button', { type: 'button', class: 'btn ghost', 'aria-label': 'Prendi ' + longDay(it.date) + ' alle ' + it.time }, 'Prendi');
+      btn.addEventListener('click', () => doSwap(it, btn));
+      return el('div', { class: 'item' }, el('div', {}, el('b', {}, cap(shortDay(it.date)) + ' · ' + it.time)), btn);
+    }));
+  } catch (e) {
+    console.error('getSwapBoard', e);
+    box.replaceChildren(el('div', { class: 'empty' }, 'Non riesco a caricare gli scambi. Ricarica la pagina.'));
+  }
 }
 
-// Primo tocco: chiede conferma. Secondo tocco entro 5 secondi: esegue.
-function arm(btn, armedText, action) {
-  const original = btn.textContent; let t;
-  btn.addEventListener('click', () => {
-    if (btn.hasAttribute('data-armed')) { clearTimeout(t); btn.removeAttribute('data-armed'); btn.textContent = original; action(); return; }
-    btn.setAttribute('data-armed', ''); btn.textContent = armedText;
-    t = setTimeout(() => { btn.removeAttribute('data-armed'); btn.textContent = original; }, 5000);
-  });
-}
-
-async function doSwap(targetId, btn) {
-  btn.disabled = true;
+$('sw').addEventListener('click', async () => {
+  const sw = $('sw'), next = sw.getAttribute('aria-checked') !== 'true';
+  sw.setAttribute('aria-checked', String(next)); sw.disabled = true; $('m-err').hidden = true;
   try {
-    const r = await call('POST', { action: 'swap', token: state.token, targetId });
-    if (!r.ok) { toast(ERR[r.error] || ERR.errore_server); }
-    else { toast('Scambio fatto. Ti ho scritto una email con il nuovo orario.'); }
-  } catch (e) { toast(ERR.errore_server); }
-  await refreshMine(); loadSlots();
-}
-
-$('#swap-toggle').addEventListener('change', async e => {
-  const want = e.target.checked;
-  try {
-    const r = await call('POST', { action: 'setSwap', token: state.token, enabled: want });
-    if (!r.ok) { e.target.checked = !want; toast(ERR[r.error] || ERR.errore_server); return; }
-    toast(want ? 'Ora gli altri clienti possono proporti uno scambio.' : 'Scambio disattivato.');
-  } catch (x) { e.target.checked = !want; toast(ERR.errore_server); }
+    const res = await apiPost({ action: 'setSwap', token: TOKEN, enabled: next });
+    if (!res.ok) { sw.setAttribute('aria-checked', String(!next)); mErr(res.error); }
+  } catch (e) {
+    console.error('setSwap', e);
+    sw.setAttribute('aria-checked', String(!next)); mErr('rete');
+  } finally { sw.disabled = false; }
 });
 
-arm($('#cancel-btn'), 'Conferma annullamento', async () => {
+async function doSwap(it, btn) {
+  if (!confirm('Scambiare la tua seduta con ' + longDay(it.date) + ' alle ' + it.time + '?')) return;
+  busy(btn, true, ''); $('m-err').hidden = true;
   try {
-    const r = await call('POST', { action: 'cancel', token: state.token });
-    if (!r.ok) { toast(ERR[r.error] || ERR.errore_server); return; }
-    saveToken(null); hideMine(); loadSlots();
-    toast('Appuntamento annullato.');
-    $('#prenota').scrollIntoView({ behavior: 'smooth' });
-  } catch (e) { toast(ERR.errore_server); }
+    const res = await apiPost({ action: 'swap', token: TOKEN, targetId: it.id });
+    if (!res.ok) { mErr(res.error); loadBoard(); return; }
+    await loadManage(TOKEN);
+  } catch (e) {
+    console.error('swap', e); mErr('rete'); busy(btn, false, 'Prendi');
+  }
+}
+
+$('cancel').addEventListener('click', async () => {
+  if (!confirm('Vuoi davvero annullare la seduta? L\'orario torna libero per gli altri.')) return;
+  const btn = $('cancel');
+  busy(btn, true, 'Annullo…'); $('m-err').hidden = true;
+  try {
+    const res = await apiPost({ action: 'cancel', token: TOKEN });
+    if (!res.ok) { mErr(res.error); return; }
+    dropToken();
+    $('m-body').hidden = true; $('m-none').hidden = false;
+    $('m-none').querySelector('p').textContent = 'Seduta annullata. Ti è arrivata una mail di conferma.';
+  } catch (e) {
+    console.error('cancel', e); mErr('rete');
+  } finally { busy(btn, false, 'Annulla la seduta'); }
 });
 
-/* ═════════ AVVIO ═════════ */
-(function init() {
-  const m = location.hash.match(/gestisci=([a-f0-9]{32,128})/i);
-  if (m) { saveToken(m[1]); history.replaceState(null, '', location.pathname + location.search); }
-  else state.token = loadToken();
-  loadSlots();
-  refreshMine().then(() => { if (m && !$('#gestisci').hidden) $('#gestisci').scrollIntoView(); });
+/* ═══════════ NAVIGAZIONE ═══════════ */
+function route() {
+  const m = location.hash.match(/^#gestisci=([A-Za-z0-9]{32,})$/);
+  if (m) { loadManage(m[1]); return; }
+  show('book');
+  const t = readToken();
+  $('mine-link').hidden = !t;
+  if (t) $('mine-link').href = '#gestisci=' + t;
+  if (!S.giorni) loadSlots();
+}
+window.addEventListener('hashchange', route);
+$('retry').addEventListener('click', loadSlots);
+$('book').addEventListener('click', book);
+$('form').addEventListener('submit', (e) => { e.preventDefault(); book(); });
+
+/* ═══════════ DEMO (solo se API_URL è vuoto) ═══════════ */
+const demo = (() => {
+  const ORARI = { 1: [7, 19], 2: [7, 19], 3: [7, 19], 4: [7, 19], 5: [7, 19], 6: [8, 15] };
+  const wait = (v) => new Promise((r) => setTimeout(() => r(v), 450));
+  const fakeToken = 'demo'.repeat(10);
+  const giorni = {};
+  const from = todayYmd();
+  for (let i = 0; i <= DAYS_AHEAD; i++) {
+    const ymd = addDays(from, i), r = ORARI[wday(ymd)], out = [];
+    if (r) for (let h = r[0]; h + 1 <= r[1]; h++) if ((i * 3 + h * 5) % 7 >= 3 && !(i === 0 && h < 14)) out.push(String(h).padStart(2, '0') + ':00');
+    giorni[ymd] = out;
+  }
+  let mine = null;
+  return {
+    get(p) {
+      if (p.action === 'getSlotsRange') return wait({ ok: true, giorni: JSON.parse(JSON.stringify(giorni)) });
+      if (p.action === 'getMine') return wait(p.token === fakeToken ? { ok: true, booking: mine } : { ok: false, error: 'token_non_valido' });
+      if (p.action === 'getSwapBoard') return wait({ ok: true, canSwap: true, items: [{ id: 'a1', date: addDays(from, 3), time: '18:00' }, { id: 'a2', date: addDays(from, 6), time: '07:00' }] });
+      return wait({ ok: false, error: 'azione_non_valida' });
+    },
+    post(b) {
+      if (b.action === 'book') {
+        if (!(giorni[b.date] || []).includes(b.time)) return wait({ ok: false, error: 'occupato' });
+        giorni[b.date] = giorni[b.date].filter((x) => x !== b.time);
+        mine = { nome: b.nome, date: b.date, time: b.time, swapOk: false, modificabile: true };
+        return wait({ ok: true, token: fakeToken });
+      }
+      if (b.action === 'setSwap') { if (mine) mine.swapOk = !!b.enabled; return wait({ ok: true }); }
+      if (b.action === 'swap') { const t = addDays(from, b.targetId === 'a1' ? 3 : 6); mine.date = t; mine.time = b.targetId === 'a1' ? '18:00' : '07:00'; mine.swapOk = false; return wait({ ok: true, date: t, time: mine.time }); }
+      if (b.action === 'cancel') { mine = null; return wait({ ok: true }); }
+      return wait({ ok: false, error: 'azione_non_valida' });
+    }
+  };
 })();
+
+$('demo').hidden = !!API_URL;
+route();
 </script>
 </body>
 </html>
