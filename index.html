@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prenota con Elia Tordo</title>
-<meta name="description" content="Prenota la tua seduta di personal training con Elia Tordo al Club Via Mantova.">
+<meta name="description" content="Prenota la tua seduta di personal training con Elia Tordo al Virgin Active Roma Via Mantova.">
 <meta name="theme-color" content="#0C0C0E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@ a{color:var(--accent)}a:hover{color:var(--accent-soft)}
 .wrap{max-width:560px;margin:0 auto;padding:0 20px 150px;display:flex;flex-direction:column;gap:32px}
 header{display:flex;align-items:center;justify-content:space-between;padding-top:24px}
 .who{display:flex;align-items:center;gap:12px}
-.avatar{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:15px}
+.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;border:2px solid var(--accent);flex:0 0 auto}
 .who b{display:block;font-weight:700}
 .who span{font-size:13px;color:var(--muted)}
 .round{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
@@ -110,6 +110,16 @@ section{display:flex;flex-direction:column;gap:14px}
 .card{border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:20px;display:flex;flex-direction:column;gap:4px}
 .card .when{font-family:var(--display);font-weight:700;font-size:22px;color:var(--accent);font-variant-numeric:tabular-nums}
 .card .where{color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin-top:10px;padding:6px 12px;border-radius:999px;background:#2B2A16;color:var(--accent);font-size:14px;font-weight:600}
+.pill.new{background:#16262B;color:#8FE3FF}
+.big-check.wait{background:var(--surface-2);color:var(--accent);border:1px solid var(--line)}
+.contact{display:flex;flex-direction:column;gap:6px;font-size:16px}
+.contact a{color:var(--ink);text-decoration:none}.contact a:hover{color:var(--accent)}
+textarea{font-family:inherit;font-size:16px;color:var(--ink);border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);padding:14px 16px;resize:vertical;min-height:88px;width:100%}
+textarea:focus{border-color:var(--accent)}
+.choice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice .btn{width:100%;padding:0 12px}
+.btn.pre{box-shadow:0 0 0 3px var(--bg),0 0 0 5px currentColor}
 
 .toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
 .toggle p{margin:2px 0 0;font-size:14px;color:var(--muted)}
@@ -128,8 +138,8 @@ footer{font-size:13px;color:var(--faint);text-align:center}
 <div class="wrap">
   <header>
     <div class="who">
-      <div class="avatar" aria-hidden="true">ET</div>
-      <div><b>Elia Tordo</b><span>Personal trainer · Club Via Mantova</span></div>
+      <img class="avatar" src="data:image/jpeg;base64,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" alt="Elia Tordo">
+      <div><b>Elia Tordo</b><span>Virgin Active Roma Via Mantova</span></div>
     </div>
     <a class="round" href="https://wa.me/393401865034" target="_blank" rel="noopener" aria-label="Scrivi a Elia su WhatsApp">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
@@ -178,7 +188,7 @@ footer{font-size:13px;color:var(--faint);text-align:center}
           <label class="check" style="margin-top:8px"><input type="checkbox" id="f-remember" checked> Ricorda i miei dati su questo telefono</label>
         </form>
         <button type="button" class="linkbtn" id="forget" hidden>Non sei tu? Cancella i dati salvati</button>
-        <p class="note">Ti arriva una mail di conferma con il link per annullare o scambiare la seduta, e un promemoria il giorno prima.</p>
+        <p class="note">Ti arriva una mail con il link per annullare o scambiare la seduta, e un promemoria il giorno prima. Se è la tua prima prenotazione, Elia la conferma entro 12 ore.</p>
         <div id="book-err" class="alert" role="alert" hidden></div>
       </section>
     </div>
@@ -187,10 +197,11 @@ footer{font-size:13px;color:var(--faint);text-align:center}
   <!-- ───── CONFERMA ───── -->
   <main id="v-done" hidden>
     <section aria-live="polite" style="gap:20px;padding-top:8px">
-      <div class="big-check"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <div class="big-check" id="done-ok"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <div class="big-check wait" id="done-wait" hidden><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
       <h1 id="done-title">Ci vediamo in sala</h1>
-      <div class="card"><span class="when" id="done-when"></span><span class="where" id="done-where"></span></div>
-      <p class="note" style="font-size:16px">Ti ho mandato una mail di conferma. Dentro c'è il tuo link personale per annullare o scambiare la seduta: non condividerlo.</p>
+      <div class="card"><span class="when" id="done-when"></span><span class="where" id="done-where"></span><span class="pill" id="done-pill" hidden></span></div>
+      <p class="note" style="font-size:16px" id="done-text">Ti ho mandato una mail di conferma. Dentro c'è il tuo link personale per annullare o scambiare la seduta: non condividerlo.</p>
       <a class="btn ghost block" id="done-manage" href="#">Gestisci la prenotazione</a>
     </section>
   </main>
@@ -208,12 +219,12 @@ footer{font-size:13px;color:var(--faint);text-align:center}
       </div>
 
       <div id="m-body" hidden style="display:flex;flex-direction:column;gap:28px">
-        <div class="card"><span class="when" id="m-when"></span><span class="where" id="m-where"></span></div>
+        <div class="card"><span class="when" id="m-when"></span><span class="where" id="m-where"></span><span class="pill" id="m-pill" hidden></span></div>
 
         <p id="m-locked" class="note" style="font-size:16px" hidden>Mancano meno di 24 ore: non si può più annullare né scambiare da qui. Se hai un imprevisto <a href="https://wa.me/393401865034" target="_blank" rel="noopener">scrivi a Elia su WhatsApp</a>.</p>
 
         <div id="m-tools" style="display:flex;flex-direction:column;gap:28px">
-          <section>
+          <section class="swap-only">
             <h2 class="label">Scambio</h2>
             <div class="toggle">
               <div><b id="sw-lbl">Rendi il mio orario scambiabile</b><p>Altri clienti vedono solo giorno e ora, mai il tuo nome.</p></div>
@@ -221,14 +232,14 @@ footer{font-size:13px;color:var(--faint);text-align:center}
             </div>
           </section>
 
-          <section>
+          <section class="swap-only">
             <div class="row"><h2 class="label">Orari che puoi prendere</h2></div>
             <p class="note">Sono le sedute che altri clienti hanno messo in scambio. Scegline una: i due orari si invertono.</p>
             <div class="list" id="board"></div>
           </section>
 
           <section>
-            <h2 class="label">Annulla</h2>
+            <h2 class="label" id="cancel-lbl">Annulla</h2>
             <button type="button" class="btn danger block" id="cancel">Annulla la seduta</button>
           </section>
         </div>
@@ -236,7 +247,43 @@ footer{font-size:13px;color:var(--faint);text-align:center}
     </div>
   </main>
 
-  <footer>Elia Tordo · Personal trainer · Club Via Mantova</footer>
+  <!-- ───── DECIDI (solo Elia, dal link nella mail) ───── -->
+  <main id="v-decide" hidden>
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <h1>Richiesta <em>da confermare</em></h1>
+      <div id="d-loading" class="card skel" style="height:140px" aria-label="Caricamento"></div>
+      <div id="d-err" class="alert" role="alert" hidden></div>
+
+      <div id="d-body" hidden style="display:flex;flex-direction:column;gap:24px">
+        <div class="card">
+          <span class="when" id="d-when"></span><span class="where" id="d-where"></span>
+          <span class="pill new" id="d-new" hidden>Cliente nuovo</span>
+        </div>
+        <section>
+          <h2 class="label">Cliente</h2>
+          <div class="contact"><b id="d-name" style="font-size:20px"></b><a id="d-tel" href="#"></a><a id="d-mail" href="#"></a></div>
+        </section>
+
+        <div id="d-open" style="display:flex;flex-direction:column;gap:20px">
+          <p class="note" id="d-deadline"></p>
+          <div class="field">
+            <label for="d-msg">Messaggio al cliente (facoltativo)</label>
+            <textarea id="d-msg" maxlength="300" placeholder="Es. quel giorno sono fuori, prova giovedì"></textarea>
+          </div>
+          <div class="choice">
+            <button type="button" class="btn" id="d-yes">Accetta</button>
+            <button type="button" class="btn danger" id="d-no">Rifiuta</button>
+          </div>
+        </div>
+
+        <div id="d-result" class="card" hidden aria-live="polite">
+          <span class="when" id="d-result-title"></span><span class="where" id="d-result-text"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Elia Tordo · Virgin Active Roma Via Mantova</footer>
 </div>
 
 <div class="bar" id="bar">
@@ -254,7 +301,7 @@ footer{font-size:13px;color:var(--faint);text-align:center}
 const API_URL = 'https://script.google.com/macros/s/AKfycbwC1THPEjidF9EWt_FB7YrZoL0DjGezWIX_6Edj3c7rXZdAm0jhMkV299q3yF9CqWJyig/exec';
 const TZ = 'Europe/Rome';
 const DAYS_AHEAD = 42;
-const PLACE = 'Club Via Mantova';
+const PLACE = 'Virgin Active Roma Via Mantova';
 const TOKEN_KEY = 'elia_token';
 
 /* ═══════════ DATE (sempre nel fuso di Roma, mai quello del telefono) ═══════════ */
@@ -269,6 +316,14 @@ const wday = (ymd) => utc(ymd).getUTCDay();
 const longDay = (ymd) => { const [, m, d] = parts(ymd); return WDL[wday(ymd)] + ' ' + d + ' ' + MOL[m - 1]; };
 const shortDay = (ymd) => { const [, m, d] = parts(ymd); return WD[wday(ymd)] + ' ' + d + ' ' + MOL[m - 1].slice(0, 3); };
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+// "giovedì 9 ottobre alle 07:30" da un istante ISO, nel fuso di Roma
+const whenIso = (iso) => {
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const ymd = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+  const hm = new Intl.DateTimeFormat('it-IT', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false }).format(d);
+  return longDay(ymd) + ' alle ' + hm;
+};
 
 /* ═══════════ API ═══════════ */
 async function apiGet(params) {
@@ -292,6 +347,9 @@ const ERR = {
   troppo_vicino: 'Mancano meno di 24 ore: per modifiche scrivi a Elia su WhatsApp.',
   non_disponibile: 'Quell\'orario non è più disponibile per lo scambio.',
   errore_server: 'Il server ha avuto un problema. Riprova tra poco.',
+  in_attesa: 'La seduta è ancora in attesa della conferma di Elia.',
+  link_non_valido: 'Questo link non è valido.',
+  gia_deciso: 'Questa richiesta è già stata gestita.',
   rete: 'Non riesco a raggiungere il server. Controlla la connessione e riprova.'
 };
 const errText = (code) => ERR[code] || ERR.errore_server;
@@ -345,7 +403,7 @@ function busy(btn, on, label) {
   btn.replaceChildren(...(on ? [el('span', { class: 'spin', 'aria-hidden': 'true' }), label] : [label]));
 }
 function show(view) {
-  ['book', 'done', 'manage'].forEach((v) => { $('v-' + v).hidden = v !== view; });
+  ['book', 'done', 'manage', 'decide'].forEach((v) => { $('v-' + v).hidden = v !== view; });
   $('bar').hidden = view !== 'book';
   window.scrollTo(0, 0);
 }
@@ -472,7 +530,14 @@ async function book() {
     if (res.token && res.token.length >= 32) saveToken(res.token);
     if ($('f-remember').checked) saveData({ nome: body.nome, cognome: body.cognome, telefono: body.telefono, email: body.email });
     else dropData();
-    $('done-title').textContent = 'Ci vediamo in sala, ' + body.nome;
+    const pending = res.stato === 'in_attesa';
+    $('done-ok').hidden = pending; $('done-wait').hidden = !pending;
+    $('done-pill').hidden = !pending;
+    $('done-pill').textContent = 'In attesa di conferma';
+    $('done-title').textContent = pending ? 'Richiesta inviata, ' + body.nome : 'Ci vediamo in sala, ' + body.nome;
+    $('done-text').textContent = pending
+      ? 'Elia ti conferma via mail' + (res.scadenza ? ' entro ' + whenIso(res.scadenza) : '') + '. Fino ad allora l\'orario è tenuto da parte per te. Nella mail trovi anche il link per ritirare la richiesta.'
+      : 'Ti ho mandato una mail di conferma. Dentro c\'è il tuo link personale per annullare o scambiare la seduta: non condividerlo.';
     $('done-when').textContent = cap(shortDay(body.date)) + ' · ' + body.time;
     $('done-where').textContent = cap(longDay(body.date)) + ' · ' + PLACE;
     $('done-manage').href = '#gestisci=' + (res.token || '');
@@ -490,6 +555,7 @@ async function book() {
 
 /* ═══════════ GESTISCI ═══════════ */
 let TOKEN = null;
+let CANCEL_LABEL = 'Annulla la seduta';
 function mErr(code) { $('m-err').textContent = errText(code); $('m-err').hidden = false; }
 
 async function loadManage(token) {
@@ -506,11 +572,18 @@ async function loadManage(token) {
     const b = res.booking;
     $('m-when').textContent = cap(shortDay(b.date)) + ' · ' + b.time;
     $('m-where').textContent = cap(longDay(b.date)) + ' · ' + PLACE;
+    const pending = b.stato === 'in_attesa';
+    $('m-pill').hidden = !pending;
+    $('m-pill').textContent = 'In attesa di conferma' + (b.scadenza ? ' · entro ' + whenIso(b.scadenza) : '');
     $('m-locked').hidden = b.modificabile;
     $('m-tools').hidden = !b.modificabile;
+    document.querySelectorAll('.swap-only').forEach((n) => { n.hidden = pending; });
+    $('cancel-lbl').textContent = pending ? 'Ritira la richiesta' : 'Annulla';
+    CANCEL_LABEL = pending ? 'Ritira la richiesta' : 'Annulla la seduta';
+    $('cancel').textContent = CANCEL_LABEL;
     $('sw').setAttribute('aria-checked', String(!!b.swapOk));
     $('m-body').hidden = false;
-    if (b.modificabile) loadBoard();
+    if (b.modificabile && !pending) loadBoard();
   } catch (e) {
     console.error('getMine', e);
     $('m-loading').hidden = true; mErr('rete');
@@ -563,7 +636,7 @@ async function doSwap(it, btn) {
 }
 
 $('cancel').addEventListener('click', async () => {
-  if (!confirm('Vuoi davvero annullare la seduta? L\'orario torna libero per gli altri.')) return;
+  if (!confirm(CANCEL_LABEL === 'Ritira la richiesta' ? 'Vuoi ritirare la richiesta?' : 'Vuoi davvero annullare la seduta? L\'orario torna libero per gli altri.')) return;
   const btn = $('cancel');
   busy(btn, true, 'Annullo…'); $('m-err').hidden = true;
   try {
@@ -571,16 +644,85 @@ $('cancel').addEventListener('click', async () => {
     if (!res.ok) { mErr(res.error); return; }
     dropToken();
     $('m-body').hidden = true; $('m-none').hidden = false;
-    $('m-none').querySelector('p').textContent = 'Seduta annullata. Ti è arrivata una mail di conferma.';
+    $('m-none').querySelector('p').textContent = (CANCEL_LABEL === 'Ritira la richiesta' ? 'Richiesta ritirata.' : 'Seduta annullata.') + ' Ti è arrivata una mail di conferma.';
   } catch (e) {
     console.error('cancel', e); mErr('rete');
-  } finally { busy(btn, false, 'Annulla la seduta'); }
+  } finally { busy(btn, false, CANCEL_LABEL); }
 });
+
+/* ═══════════ DECIDI (Elia) ═══════════ */
+const D = { id: null, k: null };
+function dErr(code) { $('d-err').textContent = errText(code); $('d-err').hidden = false; }
+const STATO_TXT = {
+  attivo: ['Confermata', 'Il cliente ha ricevuto la mail di conferma.'],
+  rifiutato: ['Rifiutata', 'Il cliente è stato avvisato e l\'orario è di nuovo libero.'],
+  scaduto: ['Scaduta', 'Nessuna risposta in tempo: l\'orario è tornato libero.'],
+  annullato: ['Ritirata', 'Il cliente ha ritirato la richiesta.']
+};
+function dResult(stato) {
+  const t = STATO_TXT[stato] || ['Già gestita', ''];
+  $('d-open').hidden = true;
+  $('d-result-title').textContent = t[0];
+  $('d-result-text').textContent = t[1];
+  $('d-result').hidden = false;
+}
+
+async function loadDecide(id, k, pre) {
+  D.id = id; D.k = k;
+  show('decide');
+  ['d-err', 'd-body', 'd-result'].forEach((x) => { $(x).hidden = true; });
+  $('d-open').hidden = false;
+  $('d-loading').hidden = false;
+  $('d-yes').classList.toggle('pre', pre === 'accetta');
+  $('d-no').classList.toggle('pre', pre === 'rifiuta');
+  try {
+    const res = await apiGet({ action: 'getRequest', id, k });
+    $('d-loading').hidden = true;
+    if (!res.ok) { dErr(res.error); return; }
+    const r = res.req;
+    $('d-when').textContent = cap(shortDay(r.date)) + ' · ' + r.time;
+    $('d-where').textContent = cap(longDay(r.date)) + ' · ' + PLACE;
+    $('d-new').hidden = !r.nuovo;
+    $('d-name').textContent = r.nome + ' ' + r.cognome;
+    $('d-tel').textContent = '📞 ' + r.telefono; $('d-tel').href = 'tel:' + r.telefono.replace(/[^+0-9]/g, '');
+    $('d-mail').textContent = '✉️ ' + r.email; $('d-mail').href = 'mailto:' + r.email;
+    $('d-deadline').textContent = r.scadenza ? 'Se non decidi entro ' + whenIso(r.scadenza) + ' la richiesta decade e l\'orario torna libero.' : '';
+    $('d-body').hidden = false;
+    if (r.stato !== 'in_attesa') dResult(r.stato);
+  } catch (e) {
+    console.error('getRequest', e);
+    $('d-loading').hidden = true; dErr('rete');
+  }
+}
+
+async function decide(decision) {
+  const yes = $('d-yes'), no = $('d-no'), btn = decision === 'accetta' ? yes : no;
+  const label = btn.textContent;
+  yes.disabled = no.disabled = true;
+  busy(btn, true, decision === 'accetta' ? 'Confermo…' : 'Rifiuto…');
+  $('d-err').hidden = true;
+  try {
+    const res = await apiPost({ action: 'decide', id: D.id, k: D.k, decision, messaggio: $('d-msg').value.trim() });
+    if (!res.ok) {
+      if (res.error === 'gia_deciso') { dResult(res.stato); return; }
+      dErr(res.error); return;
+    }
+    dResult(res.stato);
+  } catch (e) {
+    console.error('decide', e); dErr('rete');
+  } finally {
+    busy(btn, false, label); yes.disabled = no.disabled = false;
+  }
+}
+$('d-yes').addEventListener('click', () => decide('accetta'));
+$('d-no').addEventListener('click', () => decide('rifiuta'));
 
 /* ═══════════ NAVIGAZIONE ═══════════ */
 function route() {
   const m = location.hash.match(/^#gestisci=([A-Za-z0-9]{32,})$/);
   if (m) { loadManage(m[1]); return; }
+  const d = location.hash.match(/^#decidi=([a-f0-9]{12})\.([a-f0-9]{64})(?:&a=(accetta|rifiuta))?$/);
+  if (d) { loadDecide(d[1], d[2], d[3]); return; }
   show('book');
   const t = readToken();
   $('mine-link').hidden = !t;
@@ -612,11 +754,12 @@ const demo = (() => {
     if (r) for (let h = r[0]; h + 1 <= r[1]; h++) if ((i * 3 + h * 5) % 7 >= 3 && !(i === 0 && h < 14)) out.push(String(h).padStart(2, '0') + ':00');
     giorni[ymd] = out;
   }
-  let mine = null;
+  let mine = null, demoReq = 'in_attesa';
   return {
     get(p) {
       if (p.action === 'getSlotsRange') return wait({ ok: true, giorni: JSON.parse(JSON.stringify(giorni)) });
       if (p.action === 'getMine') return wait(p.token === fakeToken ? { ok: true, booking: mine } : { ok: false, error: 'token_non_valido' });
+      if (p.action === 'getRequest') return wait({ ok: true, req: { nome: 'Mario', cognome: 'Prova', telefono: '333 000 0000', email: 'prova@example.com', date: addDays(from, 2), time: '18:00', stato: demoReq, scadenza: new Date(Date.now() + 6 * 3600000).toISOString(), nuovo: true } });
       if (p.action === 'getSwapBoard') return wait({ ok: true, canSwap: true, items: [{ id: 'a1', date: addDays(from, 3), time: '18:00' }, { id: 'a2', date: addDays(from, 6), time: '07:00' }] });
       return wait({ ok: false, error: 'azione_non_valida' });
     },
@@ -630,6 +773,7 @@ const demo = (() => {
       if (b.action === 'setSwap') { if (mine) mine.swapOk = !!b.enabled; return wait({ ok: true }); }
       if (b.action === 'swap') { const t = addDays(from, b.targetId === 'a1' ? 3 : 6); mine.date = t; mine.time = b.targetId === 'a1' ? '18:00' : '07:00'; mine.swapOk = false; return wait({ ok: true, date: t, time: mine.time }); }
       if (b.action === 'cancel') { mine = null; return wait({ ok: true }); }
+      if (b.action === 'decide') { if (demoReq !== 'in_attesa') return wait({ ok: false, error: 'gia_deciso', stato: demoReq }); demoReq = b.decision === 'accetta' ? 'attivo' : 'rifiutato'; return wait({ ok: true, stato: demoReq }); }
       return wait({ ok: false, error: 'azione_non_valida' });
     }
   };
